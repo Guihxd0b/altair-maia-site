@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Altair Maia — Livros</title>
+  <meta name="description" content="Site vitrine do escritor Altair Maia. Catálogo de livros por categoria e solicitação por e-mail." />
+  <style>
+    :root{
+  --bg:#f4efe6;            /* areia */
+  --card:#faf7f1;          /* off-white / papel */
+  --line:rgba(58,42,26,.22);
+  --text:#2b2118;          /* marrom escuro */
+  --muted:#6b5a4a;         /* marrom suave */
+  --accent:#8b5e3c;        /* café (links) */
+  --accent2:#a63d2f;       /* vinho queimado (destaque) */
+  --shadow:0 14px 40px rgba(0,0,0,.14);
+  --radius:16px;
+  --max:1120px;
+  --font: "Georgia", "Times New Roman", serif;
+}
+    *{box-sizing:border-box}
+    body{
+  margin:0;
+  font-family:var(--font);
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,0)),
+    var(--bg);
+  color:var(--text);
+}
+    a{color:inherit}
+    .wrap{max-width:var(--max); margin:0 auto; padding:18px}
+    header{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .top{
+      display:grid;
+      grid-template-columns: 240px 1fr;
+      gap:0;
+      min-height: 140px;
+    }
+    .brand-left{
+      border-right:1px solid var(--line);
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .mini-cover{
+      width:100%;
+      aspect-ratio: 16/9;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.01));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      padding:10px;
+    }
+    .site-url{
+      font-size:12px;
+      color:var(--muted);
+      word-break:break-word;
+    }
+
+    .brand-main{
+      padding:18px 16px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:6px;
+      text-align:center;
+    }
+    .brand-main h1{
+      margin:0;
+      font-size:22px;
+      letter-spacing:.2px;
+    }
+    .brand-main .sub{
+      color:var(--muted);
+      font-size:13px;
+    }
+    .brand-main .email{
+      font-weight:700;
+      color: var(--accent);
+      font-size:14px;
+    }
+
+    .grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 240px 1fr;
+      gap:16px;
+      align-items:start;
+    }
+    aside{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      box-shadow: var(--shadow);
+      padding:12px;
+      position:sticky;
+      top:16px;
+    }
+    .aside-title{
+       margin:6px 6px 10px;
+  font-size:11px;
+  color: var(--muted);
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  font-weight:700;
+}
+    .cat-list{display:flex; flex-direction:column; gap:10px;}
+    .cat-btn{
+        width:100%;
+  border:1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  padding:8px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  text-align:left;
+  transition: background .15s ease, color .15s ease;
+  font-weight:600;
+}
+    .cat-btn:hover{background: rgba(0,0,0,.04);}
+    .cat-btn.active{  background: rgba(0,0,0,.06);
+  color: var(--accent);
+}
+    .search{
+      margin:10px 6px 12px;
+      display:flex; gap:10px;
+    }
+    .search input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      color:var(--text);
+      outline:none;
+    }
+    main{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hero{
+      padding:18px;
+      border-bottom:1px solid var(--line);
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+      align-items:center;
+    }
+    .hero h2{margin:0 0 8px; font-size:18px}
+    .hero p{margin:0; color:var(--muted); line-height:1.55}
+    .hero .highlight{
+      padding:14px 14px;
+      border:1px dashed rgba(78,161,255,.45);
+      border-radius:16px;
+      background: rgba(78,161,255,.06);
+    }
+    .hero .highlight .blue{color:var(--accent); font-weight:800}
+    .hero .highlight .red{color:var(--accent2); font-weight:900}
+    .hero .highlight a{color:var(--accent); font-weight:800; text-decoration:none}
+    .hero-cover{
+      border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.65));
+  aspect-ratio: 3/4;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--muted);
+  font-size:12px;
+  position:relative;
+  box-shadow:
+    0 10px 26px rgba(0,0,0,.12),
+    inset 0 1px 0 rgba(255,255,255,.7);
+  padding:6px;
+}
+    .hero-cover img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  border-radius:10px;
+  display:block;
+}
+    .content{
+      padding:18px;
+    }
+    .section-title{
+      display:flex;
+      align-items:baseline;
+      gap:10px;
+      margin:0 0 12px;
+    }
+    .section-title h3{margin:0; font-size:18px}
+    .section-title .meta{color:var(--muted); font-size:12px}
+    .books{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:14px;
+    }
+    .book{
+      border:1px solid var(--line);
+  border-radius:16px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.55));
+  overflow:hidden;
+  cursor:pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+  display:flex;
+  flex-direction:column;
+  min-height:240px;
+  box-shadow:
+    0 6px 14px rgba(0,0,0,.08),
+    inset 0 1px 0 rgba(255,255,255,.6);
+}
+    .book:hover{transform: translateY(-2px); background: rgba(255,255,255,.05)}
+    .cover{
+      aspect-ratio: 16/10;
+      background: rgba(0,0,0,.20);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--muted);
+      font-size:12px;
+      border-bottom:1px solid var(--line);
+      overflow:hidden;
+    }
+    .cover img{width:100%; height:100%; object-fit:cover; display:block}
+    #featuredCover img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  background: rgba(0,0,0,.03);
+}
+    .book .info{ padding:12px;
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+    .book .title{margin:0 0 6px;
+  font-weight:900;
+  font-size:16px;
+  color: var(--text);
+  letter-spacing:.25px;
+}
+    .book .desc{margin:0; color:var(--muted); font-size:13px; line-height:1.45}
+    .chip{
+       display:inline-block;
+  margin-top:auto;
+  font-size:12px;
+  color: var(--muted);
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.03);
+  padding:6px 10px;
+  border-radius:999px;
+}
+    footer{
+      margin:16px 0 8px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+    }
+
+    /* Modal */
+    .backdrop{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:999;
+    }
+    .backdrop.show{display:flex}
+    .modal{
+       width:min(920px, 100%);
+  border:1px solid var(--line);
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 0 30px 120px rgba(0,0,0,.35);
+  overflow:hidden;
+  display:grid;
+  grid-template-columns: 320px 1fr;
+  color: var(--text);
+}
+    .modal .mcover{
+       background: rgba(0,0,0,.02);
+  border-right:1px solid var(--line);
+  padding:14px;
+}
+    .modal .mcover .img{
+       width:100%;
+  aspect-ratio: 3/4;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.55));
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--muted);
+  font-size:12px;
+}
+    .modal .mcover .img img{width:100%; height:100%; object-fit:cover; display:block}
+    .modal .mbody{padding:16px}
+    .modal .mbody h4{margin:0 0 8px; font-size:20px}
+    .modal .mbody .cat{color:var(--accent); font-weight:800; font-size:12px; letter-spacing:.4px; text-transform:uppercase}
+    .modal .mbody p{margin:10px 0; color:var(--muted); line-height:1.6}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .btn{
+       border:1px solid var(--line);
+  background: rgba(0,0,0,.03);
+  color: var(--text);
+  padding:10px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  text-decoration:none;
+  font-weight:800;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+    .btn.primary{
+      border-color: rgba(139,94,60,.55);
+  background: rgba(139,94,60,.14);
+  color: var(--text);
+}
+    .btn:hover{  background: rgba(0,0,0,.06);}
+    .close{
+      margin-left:auto;
+      border-color: rgba(255,255,255,.2);
+    }
+
+    /* responsivo */
+    @media (max-width: 980px){
+      .books{grid-template-columns: repeat(2, minmax(0,1fr));}
+      .hero{grid-template-columns: 1fr; }
+      .hero-cover{max-width:260px}
+    }
+    @media (max-width: 760px){
+      .top{grid-template-columns: 1fr;}
+      .brand-left{border-right:none; border-bottom:1px solid var(--line)}
+      .grid{grid-template-columns: 1fr;}
+      aside{position:relative; top:0}
+      .books{grid-template-columns: 1fr;}
+      .modal{grid-template-columns: 1fr;}
+      .modal .mcover{border-right:none; border-bottom:1px solid var(--line)}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="top">
+        <div class="brand-left">
+          <div class="mini-cover">Imagem/Logo<br/>do autor (opcional)</div>
+          <div class="site-url" id="siteUrl">www.escritor2001.com</div>
+        </div>
+
+        <div class="brand-main">
+          <h1>Site do Escritor<br/>Altair Maia</h1>
+          <div class="sub">Economista • Escritor • Palestrante</div>
+          <div class="email" id="authorEmail">altair2001@yahoo.com</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <aside>
+        <div class="aside-title">Categorias</div>
+
+        <div class="search">
+          <input id="q" type="search" placeholder="Buscar livro..." />
+        </div>
+
+        <div class="cat-list" id="catList"></div>
+      </aside>
+
+      <main>
+        <div class="hero">
+          <div class="highlight">
+            <h2>✅ Destaque</h2>
+            <p>
+              <span class="blue">Esta semana estamos apresentando o livro:</span><br>
+              <span class="red" id="featuredTitle">Tributo a Jonathan Makeba</span><br><br>
+              <a href="#" id="featuredLink">Clique aqui</a> e leia o resumo deste livro.
+            </p>
+          </div>
+
+          <div class="hero-cover" id="featuredCover">
+            Capa do destaque (opcional)
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="section-title">
+            <h3 id="sectionTitle">África</h3>
+            <div class="meta" id="sectionMeta"></div>
+          </div>
+
+          <div class="books" id="booksGrid"></div>
+        </div>
+      </main>
+    </div>
+
+    <footer>
+      © <span id="year"></span> Altair Maia • Solicitações de livros via e-mail.
+    </footer>
+  </div>
+
+  <!-- Modal -->
+  <div class="backdrop" id="backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+      <div class="mcover">
+        <div class="img" id="mImg">Capa do livro</div>
+      </div>
+      <div class="mbody">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cat" id="mCat">Categoria</div>
+          <button class="btn close" id="mClose" type="button">Fechar ✕</button>
+        </div>
+        <h4 id="mTitle">Título</h4>
+        <p id="mDesc">Resumo do livro...</p>
+
+        <div class="actions">
+          <a class="btn primary" id="mMail" href="#">Solicitar por e-mail</a>
+          <a class="btn" id="mAmazon" href="#" target="_blank" rel="noopener">Ver na Amazon</a>
+        </div>
+
+        <p style="margin-top:12px; font-size:12px; color:var(--muted)">
+  * Para adquirir: clique em “Solicitar por e-mail”. O pagamento e envio são combinados diretamente com o autor.
+</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== CONFIG DO AUTOR =====
+    const AUTHOR = {
+      name: "Altair Maia",
+      email: "altair2001@yahoo.com",
+      siteUrl: "www.escritor2001.com"
+    };
+
+    // ===== BASE DE LIVROS =====
+    // Dica: para cada livro, você pode colocar cover: "assets/capas/arquivo.jpg"
+    // Se não tiver, deixe cover: "" que aparece placeholder.
+    const BOOKS = [
+      // África
+      {
+        id: "neoafrikanismo",
+        title: "Neoafrikanismo — O resgate da África pelos africanos",
+        category: "África",
+        short: "Movimentos de libertação, independência e autonomia econômica.",
+        description:
+          "O continente africano foi dominado pelos europeus ao longo de quatro ou cinco séculos. " +
+          "A partir do século passado surgiram movimentos de libertação e independência, bem como " +
+          "iniciativas de integração como a OUA/UA, ampliando objetivos como autonomia econômica.",
+        cover: "",
+        amazonUrl: ""
+      },
+      {
+        id: "tributo-makeba",
+        title: "Tributo a Jonathan Makeba",
+        category: "África",
+        short: "Romance político e econômico envolvendo mineração, corrupção e destino.",
+        description:
+          "Jonathan Makeba, idealista e líder visionário, aposta no potencial do continente africano " +
+          "e na mineração como ferramenta de transformação social. A trama percorre interesses econômicos, " +
+          "pressões políticas e um desfecho dramático, levantando a pergunta: “Onde está Jonathan Makeba?”",
+        cover: "assets/capas/tributo-jonathan-makeba.png",
+        amazonUrl: ""
+      },
+
+      // Economia e Relações Internacionais
+      {
+        id: "benin-relacoes",
+        title: "BENIN — Relações Econômicas Internacionais",
+        category: "Economia e Relações Internacionais",
+        short: "Texto analítico sobre relações internacionais.",
+        description:
+          "Texto analítico sobre como o Benin está lidando com suas relações internacionais.",
+        cover: "",
+        amazonUrl: ""
+      },
+      {
+        id: "relacoes-economicas",
+        title: "Relações Econômicas Internacionais",
+        category: "Economia e Relações Internacionais",
+        short: "Como o mundo funciona? Uma leitura “traduz” instituições internacionais.",
+        description:
+          "Obra que apresenta o funcionamento das instituições internacionais e do sistema econômico global de forma acessível.",
+        cover: "",
+        amazonUrl: ""
+      },
+      {
+        id: "manual-exportacao",
+        title: "Manual de Exportação para Pequenas Empresas",
+        category: "Economia e Relações Internacionais",
+        short: "Abrindo portas do comércio internacional para pequenas empresas.",
+        description:
+          "Obra destinada a orientar pequenas empresas a iniciar e organizar processos de exportação.",
+        cover: "",
+        amazonUrl: ""
+      },
+
+      // Política
+      {
+        id: "morte-do-barao",
+        title: "A morte do Barão",
+        category: "Política",
+        short: "Ascensão e queda de uma cidade no interior de Minas Gerais.",
+        description:
+          "Romance político ambientado em Manaca, com mudanças bruscas de poder e impactos sociais na cidade.",
+        cover: "",
+        amazonUrl: ""
+      },
+      {
+        id: "zpcas",
+        title: "ZPCAS — A new deal for South Atlantic",
+        category: "Política",
+        short: "Proposta de criação de grande zona comercial no Atlântico Sul.",
+        description:
+          "Texto com proposta e reflexão sobre uma zona comercial no Atlântico Sul e suas implicações.",
+        cover: "",
+        amazonUrl: ""
+      },
+
+      // Romance
+      {
+        id: "rosa-mutilada",
+        title: "Rosa Mutilada",
+        category: "Romance",
+        short: "Narrativa sobre MGF (Mutilação Genital Feminina) e suas consequências.",
+        description:
+          "Romance que aborda a luta contra a MGF e seus impactos na vida de milhões de meninas.",
+        cover: "",
+        amazonUrl: ""
+      },
+
+      // Infantis
+      {
+        id: "dino-queimou-pe",
+        title: "O Dino que queimou o pé",
+        category: "Infantis",
+        short: "Livro infantil recomendado pelas crianças para os adultos.",
+        description:
+          "Uma história infantil com humor e lições do cotidiano.",
+        cover: "",
+        amazonUrl: ""
+      },
+
+      // Outros autores
+      { id:"sandro", title:"Sandro de Moura", category:"Outros autores", short:"", description:"", cover:"", amazonUrl:"" },
+      { id:"rachel", title:"Rachel Campos", category:"Outros autores", short:"", description:"", cover:"", amazonUrl:"" },
+
+      // Coisas de livros
+      {
+        id: "estante-movel",
+        title: "Estante móvel",
+        category: "Coisas de livros",
+        short: "Item/curiosidade relacionada a livros.",
+        description:
+          "Conteúdo extra relacionado a livros e leitura.",
+        cover: "",
+        amazonUrl: ""
+      }
+    ];
+
+    // ===== CATEGORIAS (ordem igual do menu que ele mandou) =====
+    const CATEGORIES = [
+      "África",
+      "Política",
+      "Economia",
+      "Relações Internacionais",
+      "Genéricos",
+      "Infantis",
+      "Romance",
+      "Outros autores",
+      "Coisas de livros",
+      "Economia e Relações Internacionais" // (caso ele queira junto; pode remover)
+    ];
+
+    // ===== UTIL =====
+    const $ = (id) => document.getElementById(id);
+
+    function normalize(s){
+      return (s || "")
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function buildMailto(book){
+      const subject = `Solicitação do livro: ${book.title}`;
+      const body =
+`Olá, ${AUTHOR.name}!
+
+Tenho interesse no livro: "${book.title}".
+
+Por gentileza, poderia me informar:
+- Valor
+- Formas de pagamento
+- Prazo/forma de entrega
+
+Desde já, obrigado(a)!`;
+
+      const params = new URLSearchParams({
+        subject,
+        body
+      });
+      return `mailto:${AUTHOR.email}?${params.toString()}`;
+    }
+
+    function setFeatured(bookId){
+      const b = BOOKS.find(x => x.id === bookId) || BOOKS[0];
+      $("featuredTitle").textContent = b.title;
+      $("featuredLink").onclick = (e) => { e.preventDefault(); openModal(b); };
+
+      const fc = $("featuredCover");
+      fc.innerHTML = "";
+      if(b.cover){
+        const img = document.createElement("img");
+        img.src = b.cover;
+        img.alt = `Capa do livro ${b.title}`;
+        fc.appendChild(img);
+      }else{
+        fc.textContent = "Capa do destaque (opcional)";
+      }
+    }
+
+    // ===== RENDER =====
+    let currentCategory = CATEGORIES[0];
+    let currentQuery = "";
+
+    function renderCategories(){
+      const list = $("catList");
+      list.innerHTML = "";
+
+      CATEGORIES.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = "cat-btn" + (cat === currentCategory ? " active" : "");
+        btn.textContent = cat;
+        btn.onclick = () => {
+          currentCategory = cat;
+          renderCategories();
+          renderBooks();
+        };
+        list.appendChild(btn);
+      });
+    }
+
+    function getBooksForView(){
+      const q = normalize(currentQuery);
+      return BOOKS.filter(b => {
+        const catOk = b.category === currentCategory;
+        if(!catOk) return false;
+        if(!q) return true;
+
+        const hay = normalize(`${b.title} ${b.short} ${b.description}`);
+        return hay.includes(q);
+      });
+    }
+
+    function renderBooks(){
+      $("sectionTitle").textContent = currentCategory;
+      const items = getBooksForView();
+      $("sectionMeta").textContent = `${items.length} item(ns)`;
+
+      const grid = $("booksGrid");
+      grid.innerHTML = "";
+
+      if(items.length === 0){
+        grid.innerHTML = `<div style="color:rgba(255,255,255,.7)">Nenhum resultado nesta categoria.</div>`;
+        return;
+      }
+
+      items.forEach(b => {
+        const card = document.createElement("div");
+        card.className = "book";
+        card.onclick = () => openModal(b);
+
+        const cover = document.createElement("div");
+        cover.className = "cover";
+        if(b.cover){
+          const img = document.createElement("img");
+          img.src = b.cover;
+          img.alt = `Capa do livro ${b.title}`;
+          cover.appendChild(img);
+        }else{
+          cover.textContent = "Capa (opcional)";
+        }
+
+        const info = document.createElement("div");
+        info.className = "info";
+        info.innerHTML = `
+          <p class="title">${b.title}</p>
+          <p class="desc">${b.short || "Clique para ver detalhes."}</p>
+          <span class="chip">Ver resumo</span>
+        `;
+
+        card.appendChild(cover);
+        card.appendChild(info);
+        grid.appendChild(card);
+      });
+    }
+
+    // ===== MODAL =====
+    function openModal(book){
+      const bd = $("backdrop");
+      bd.classList.add("show");
+
+      $("mCat").textContent = book.category || "Livro";
+      $("mTitle").textContent = book.title || "Título";
+      $("mDesc").textContent = book.description || book.short || "Sem descrição no momento.";
+
+      // imagem
+      const box = $("mImg");
+      box.innerHTML = "";
+      if(book.cover){
+        const img = document.createElement("img");
+        img.src = book.cover;
+        img.alt = `Capa do livro ${book.title}`;
+        box.appendChild(img);
+      }else{
+        box.textContent = "Capa do livro (opcional)";
+      }
+
+      // mailto
+      const mail = $("mMail");
+      mail.href = buildMailto(book);
+
+      // amazon (se não tiver, escondemos)
+      const amz = $("mAmazon");
+      if(book.amazonUrl){
+        amz.style.display = "inline-flex";
+        amz.href = book.amazonUrl;
+      }else{
+        amz.style.display = "none";
+        amz.href = "#";
+      }
+    }
+
+    function closeModal(){
+      $("backdrop").classList.remove("show");
+    }
+
+    $("mClose").onclick = closeModal;
+    $("backdrop").onclick = (e) => {
+      if(e.target.id === "backdrop") closeModal();
+    };
+    window.addEventListener("keydown", (e) => {
+      if(e.key === "Escape") closeModal();
+    });
+
+    // ===== INIT =====
+    $("authorEmail").textContent = AUTHOR.email;
+    $("siteUrl").textContent = AUTHOR.siteUrl;
+    $("year").textContent = new Date().getFullYear();
+
+    $("q").addEventListener("input", (e) => {
+      currentQuery = e.target.value;
+      renderBooks();
+    });
+
+    renderCategories();
+    renderBooks();
+    setFeatured("tributo-makeba");
+  </script>
+</body>
+</html>
