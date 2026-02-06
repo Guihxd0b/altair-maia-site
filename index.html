@@ -64,6 +64,13 @@
       text-align:center;
       padding:10px;
     }
+
+    .mini-cover img{
+  max-width: 85%;
+  max-height: 85%;
+  object-fit: contain;
+}
+
     .site-url{
       font-size:12px;
       color:var(--muted);
@@ -356,12 +363,83 @@
     @media (max-width: 760px){
       .top{grid-template-columns: 1fr;}
       .brand-left{border-right:none; border-bottom:1px solid var(--line)}
-      .grid{grid-template-columns: 1fr;}
       aside{position:relative; top:0}
       .books{grid-template-columns: 1fr;}
       .modal{grid-template-columns: 1fr;}
       .modal .mcover{border-right:none; border-bottom:1px solid var(--line)}
     }
+
+@media (max-width: 760px){
+  .grid{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  /* quebra o main para ordenar hero e content separadamente */
+  main{ display: contents; }
+
+  /* ordem correta: destaque -> categorias -> livros */
+  .hero{ order: 1; }
+  aside{ order: 2; width: 100%; max-width:none; }
+  .content{ order: 3; width: 100%; }
+}
+
+@media (max-width: 760px){
+  /* deixa o destaque mais compacto */
+  .hero{
+    padding: 14px;
+    gap: 12px;
+  }
+
+  /* segura a capa do destaque */
+  .hero-cover{
+    max-width: 240px;   /* você pode testar 220/240/260 */
+    width: 100%;
+    margin: 0 auto;     /* centraliza */
+    aspect-ratio: 3/4;  /* mantém proporção */
+  }
+
+  /* imagem da capa sem estourar */
+  .hero-cover img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+/* Modal no celular: não travar e permitir rolagem */
+@media (max-width: 760px){
+  .backdrop{
+    align-items: flex-start;   /* evita “centralizar” e cortar topo */
+    padding: 10px;
+    overflow: auto;           /* permite rolar se precisar */
+  }
+
+  .modal{
+    max-height: calc(100vh - 20px);
+    overflow: hidden;         /* a rolagem vai ficar no corpo */
+  }
+
+  .modal .mcover{
+    padding: 10px;
+  }
+
+  /* limita a área da capa no mobile */
+  .modal .mcover .img{
+    max-height: 40vh;
+    overflow: hidden;
+  }
+
+  /* corpo do modal rola */
+  .modal .mbody{
+    max-height: calc(100vh - 40vh - 60px);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch; /* iPhone: scroll suave */
+  }
+}
+
   </style>
 </head>
 
@@ -370,14 +448,15 @@
     <header>
       <div class="top">
         <div class="brand-left">
-          <div class="mini-cover">Imagem/Logo<br/>do autor (opcional)</div>
-          <div class="site-url" id="siteUrl">www.escritor2001.com</div>
+          <div class="mini-cover"> 
+            <img src="assets/logo/logo-altair-maia.png" alt="Altair Maia">
         </div>
 
         <div class="brand-main">
           <h1>Site do Escritor<br/>Altair Maia</h1>
           <div class="sub">Economista • Escritor • Palestrante</div>
           <div class="email" id="authorEmail">altair2001@yahoo.com</div>
+          <div class="site-url center" id="siteUrl">www.escritor20021.com</div>
         </div>
       </div>
     </header>
@@ -646,7 +725,7 @@ Desde já, obrigado(a)!`;
     }
 
     // ===== RENDER =====
-    let currentCategory = CATEGORIES[0];
+    let currentCategory = null;
     let currentQuery = "";
 
     function renderCategories(){
@@ -658,13 +737,57 @@ Desde já, obrigado(a)!`;
         btn.className = "cat-btn" + (cat === currentCategory ? " active" : "");
         btn.textContent = cat;
         btn.onclick = () => {
-          currentCategory = cat;
-          renderCategories();
-          renderBooks();
-        };
+  currentCategory = cat;
+
+  renderCategories();
+  renderHero();
+  renderBooks();
+
+  // DESCE para onde os livros aparecem
+ const el = document.querySelector(".content");
+if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+};
         list.appendChild(btn);
       });
     }
+
+    const FEATURED_ID = "tributo-makeba"; // ID do livro destaque da semana
+
+function renderHero(){
+  const titleEl = $("featuredTitle");
+  const linkEl  = $("featuredLink");
+  const coverEl = $("featuredCover");
+
+  // HOME → destaque da semana FIXO
+  if(!currentCategory){
+    const book = BOOKS.find(b => b.id === FEATURED_ID);
+    titleEl.textContent = book.title;
+
+    linkEl.textContent = "Clique aqui";
+    linkEl.onclick = (e) => {
+      e.preventDefault();
+      openBook(FEATURED_ID);
+    };
+
+    // capa do destaque
+    coverEl.innerHTML = `<img src="${book.cover}" alt="${book.title}">`;
+    return;
+  }
+
+  // CATEGORIA → assume o lugar do destaque
+  titleEl.textContent = currentCategory;
+  linkEl.textContent = "Clique aqui para ver os livros desta categoria";
+  linkEl.onclick = (e) => {
+    e.preventDefault();
+    const el = $("sectionTitle");
+    if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const items = BOOKS.filter(b => b.category === currentCategory);
+  if(items[0] && items[0].cover){
+    coverEl.innerHTML = `<img src="${items[0].cover}" alt="${items[0].title}">`;
+  }
+}
 
     function getBooksForView(){
       const q = normalize(currentQuery);
@@ -679,6 +802,13 @@ Desde já, obrigado(a)!`;
     }
 
     function renderBooks(){
+    if(!currentCategory){
+  $("sectionTitle").textContent = "";
+  $("sectionMeta").textContent = "";
+  $("booksGrid").innerHTML = "";
+  return;
+}
+
       $("sectionTitle").textContent = currentCategory;
       const items = getBooksForView();
       $("sectionMeta").textContent = `${items.length} item(ns)`;
@@ -723,6 +853,7 @@ Desde já, obrigado(a)!`;
 
     // ===== MODAL =====
     function openModal(book){
+          document.body.style.overflow = "hidden";
       const bd = $("backdrop");
       bd.classList.add("show");
 
@@ -758,6 +889,7 @@ Desde já, obrigado(a)!`;
     }
 
     function closeModal(){
+       document.body.style.overflow = "";
       $("backdrop").classList.remove("show");
     }
 
@@ -780,6 +912,7 @@ Desde já, obrigado(a)!`;
     });
 
     renderCategories();
+    renderHero();
     renderBooks();
     setFeatured("tributo-makeba");
   </script>
