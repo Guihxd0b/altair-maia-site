@@ -71,11 +71,12 @@
   object-fit: contain;
 }
 
-    .site-url{
-      font-size:12px;
-      color:var(--muted);
-      word-break:break-word;
-    }
+  .site-url{
+  font-size:12px;
+  color:var(--muted);
+  word-break:break-word;
+  text-align: center;      /* ← centraliza o texto */
+}
 
     .brand-main{
       padding:18px 16px;
@@ -446,18 +447,19 @@
 <body>
   <div class="wrap">
     <header>
-      <div class="top">
-        <div class="brand-left">
-          <div class="mini-cover"> 
-            <img src="assets/logo/logo-altair-maia.png" alt="Altair Maia">
-        </div>
+     <div class="top">
+  <div class="brand-left">
+    <div class="mini-cover">
+      <img src="assets/logo/logo-altair-maia.png" alt="Altair Maia">
+    </div>
+    <div class="site-url" id="siteUrl">www.escritor2001.com</div>
+  </div>
 
-        <div class="brand-main">
-          <h1>Site do Escritor<br/>Altair Maia</h1>
-          <div class="sub">Economista • Escritor • Palestrante</div>
-          <div class="email" id="authorEmail">altair2001@yahoo.com</div>
-          <div class="site-url center" id="siteUrl">www.escritor20021.com</div>
-        </div>
+  <div class="brand-main">
+    <h1>Site do Escritor<br/>Altair Maia</h1>
+    <div class="sub">Economista • Escritor • Palestrante</div>
+    <div class="email" id="authorEmail">altair2001@yahoo.com</div>
+  </div>
       </div>
     </header>
 
@@ -772,20 +774,6 @@ function renderHero(){
     // capa do destaque
     coverEl.innerHTML = `<img src="${book.cover}" alt="${book.title}">`;
     return;
-  }
-
-  // CATEGORIA → assume o lugar do destaque
-  titleEl.textContent = currentCategory;
-  linkEl.textContent = "Clique aqui para ver os livros desta categoria";
-  linkEl.onclick = (e) => {
-    e.preventDefault();
-    const el = $("sectionTitle");
-    if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const items = BOOKS.filter(b => b.category === currentCategory);
-  if(items[0] && items[0].cover){
-    coverEl.innerHTML = `<img src="${items[0].cover}" alt="${items[0].title}">`;
   }
 }
 
